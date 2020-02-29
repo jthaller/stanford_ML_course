@@ -27,6 +27,11 @@ m = size(X, 1);
 % for i=1:10
 %     y(i,i) = 1;
 % end
+I = eye(num_labels);
+y = zeros(m,num_labels);
+for i=0:m
+    
+end
 
 
 % You need to return the following variables correctly 
@@ -66,35 +71,28 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-
-I = eye(num_labels);
-Y = zeros(m, num_labels);
-for i=1:m
-  Y(i, :)= I(y(i), :);
-end
-
 %part 1: feedforward -----------------------
 % hidden layer, L=2
 % Add ones to the X data matrix
 a1 = [ones(m,1) X];
 z2 = a1*Theta1.';
 a2 = sigmoid(z2);
-a2 = [ones(n,1) a2]
 a2 = a2.';
 h2a = log(a2)*(-y); %(25x1)
-h2b = (log(1-a2))*(1-Y);
+h2b = (log(1-a2))*(1-y);
 J2 = (h2a - h2b)/m;
 
 
 n = size(a2,2);
 
 % output layer, L=3
-
+a2 = a2.';
+a2 = [ones(n,1) a2];
 z3 = a2*Theta2.';
 a3 = sigmoid(z3);
 a3 = a3.';
 h3a=log(a3)*(-y);
-h3b=(log(1-a3))*(1-Y);
+h3b=(log(1-a3))*(1-y);
 J3 = (h3a - h3b)/m;
 
 J = sum(J2)+sum(J3);

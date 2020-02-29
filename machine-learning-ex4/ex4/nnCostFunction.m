@@ -62,7 +62,8 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-
+%part 1: feedforward
+J = 
 
 
 

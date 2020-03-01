@@ -79,25 +79,13 @@ end
 a1 = [ones(m,1) X];
 z2 = a1*Theta1.';
 a2 = sigmoid(z2);
-a2 = [ones(n,1) a2]
-a2 = a2.';
-h2a = log(a2)*(-y); %(25x1)
-h2b = (log(1-a2))*(1-Y);
-J2 = (h2a - h2b)/m;
-
-
-n = size(a2,2);
-
-% output layer, L=3
-
+n = size(a2,1);
+a2 = [ones(n,1) a2];
+% a2 = a2.';
 z3 = a2*Theta2.';
 a3 = sigmoid(z3);
-a3 = a3.';
-h3a=log(a3)*(-y);
-h3b=(log(1-a3))*(1-Y);
-J3 = (h3a - h3b)/m;
+J = (1/m)*sum(sum((-Y).*log(a3) - (1-Y).*log(1-a3), 2)); %sum(...,2) sums horizontally to give a 5000x1
 
-J = sum(J2)+sum(J3);
 
 %with reg
 % reg=theta.^2;

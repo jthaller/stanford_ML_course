@@ -88,10 +88,12 @@ J = (1/m)*sum(sum((-Y).*log(a3) - (1-Y).*log(1-a3), 2)); %sum(...,2) sums horizo
 
 
 %with reg
-% reg=theta.^2;
-% reg = sum(reg(2:end,:)); %only don't include theta_0 in the sum. it doesn't get
-%added to the regularization part.
-% J=(h1-h2)/m + lambda/(2*m)*reg;
+T1_2 = Theta1.^2;
+T2_2 = Theta2.^2;
+reg = sum(sum(T1_2(:,2:end),2)) + sum(sum(T2_2(:,2:end),2)); %only don't include the bias terms in the sum
+% the bias terms are the first col in the thetas
+reg = lambda/(2*m) *reg
+J = J + reg;
 
 
 

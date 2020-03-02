@@ -24,10 +24,6 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
-% for i=1:10
-%     y(i,i) = 1;
-% end
-
 
 % You need to return the following variables correctly 
 J = 0;
@@ -66,14 +62,16 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-
+% for i=1:10
+%     I(i,i) = 1;
+% end
 I = eye(num_labels);
 Y = zeros(m, num_labels);
 for i=1:m
   Y(i, :)= I(y(i), :);
 end
 
-%part 1: feedforward -----------------------
+%part 1: feedforward ------------------------------------------------------
 % hidden layer, L=2
 % Add ones to the X data matrix
 a1 = [ones(m,1) X];
@@ -86,47 +84,52 @@ z3 = a2*Theta2.';
 a3 = sigmoid(z3);
 J = (1/m)*sum(sum((-Y).*log(a3) - (1-Y).*log(1-a3), 2)); %sum(...,2) sums horizontally to give a 5000x1
 
-
 %with reg
 T1_2 = Theta1.^2;
 T2_2 = Theta2.^2;
 reg = sum(sum(T1_2(:,2:end),2)) + sum(sum(T2_2(:,2:end),2)); %only don't include the bias terms in the sum
 % the bias terms are the first col in the thetas
-reg = lambda/(2*m) *reg
+reg = lambda/(2*m) *reg;
 J = J + reg;
 
+%part 2: backprop ---------------------------------------------------------
+%note, I don't think this will be hard to vectorize without loops, but since I've done 
+%most of the other stuff vectorized to start, I'm going to write this with
+%loops for as practice.
+Delta1=0;
+Delta2=0;
+for t = 1:m
+   a1t = a1(m,2:end); %a1t size 1x400
+   a2t = a2(m,2:end); %a2t size 1x25
+   a3t = a3(m,:); %a3t size     1x10
+   Yt = Y(m,:); %Yt size        1x10
+   
+   d3 = a3t - Yt; %d3 size 1x10
+   d2 = d3*Theta2(:,2:end) .* sigmoidGradient(z2(m,:)); %d2 size 1x25
 
+   Delta2 = Delta2 + d3.'*a2t; %Delta2 size 10x25 
+   Delta1 = Delta1 + d2.'*a1t; %Delta1 size 25x400
+end
+Delta1 = [ones(hidden_layer_size,1) Delta1]; %Delta1 size 25x401
+Delta2 = [ones(num_labels,1) Delta2]; %Delta2 size 10x26
+Theta1_grad = 1/m .* Delta1; %should be size 10x26
+Theta2_grad = 1/m .* Delta1; %should be size 25x401
 
-
-
-
-% grad = 1/m * sum((h-y).*X);
-% grad = grad';
-
-
-% grad(1) = grad(1) + (lambda/m).*theta(1,:);
-%note, I just copy/pasted from my week two solutions.
-%interestingly, the hints they give this week are pretty much
-%how I did it last week. I didn't realize they expected people to use
-%loops last week.
-% grad(2:end,:) = grad(2:end,:) + (lambda/m).*theta(2:end,:);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%vectorized ---------------------------------------------------------------
+% A1 = [ones(m, 1) X];
+% Z2 = A1 * Theta1';
+% A2 = [ones(size(Z2, 1), 1) sigmoid(Z2)];
+% Z3 = A2*Theta2';
+% H = sigmoid(Z3);
+% penalty = (lambda/(2*m))*(sum(sum(Theta1(:, 2:end).^2, 2)) + sum(sum(Theta2(:,2:end).^2, 2)));
+% J = (1/m)*sum(sum((-Y).*log(H) - (1-Y).*log(1-H), 2));
+% J = J + penalty;
+% Sigma3 = A3 - Y;
+% Sigma2 = (Sigma3*Theta2 .* sigmoidGradient([ones(size(Z2, 1), 1) Z2]))(:, 2:end);
+% Delta_1 = Sigma2'*A1;
+% Delta_2 = Sigma3'*A2;
+% Theta1_grad = Delta_1./m + (lambda/m)*[zeros(size(Theta1,1), 1) Theta1(:, 2:end)];
+% Theta2_grad = Delta_2./m + (lambda/m)*[zeros(size(Theta2,1), 1) Theta2(:, 2:end)];
 % -------------------------------------------------------------
 
 % =========================================================================

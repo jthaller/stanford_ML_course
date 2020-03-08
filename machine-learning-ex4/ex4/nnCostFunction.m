@@ -96,41 +96,40 @@ J = J + reg;
 %note, I don't think this will be hard to vectorize without loops, but since I've done 
 %most of the other stuff vectorized to start, I'm going to write this with
 %loops for as practice.
-% Delta1=0;
-% Delta2=0;
-% for t = 1:m
-%    a1t = a1(m,2:end); %a1t size 1x400
-%    a2t = a2(m,2:end); %a2t size 1x25
-%    a3t = a3(m,:); %a3t size     1x10
-%    Yt = Y(m,:); %Yt size        1x10
-%    
-%    d3 = a3t - Yt; %d3 size 1x10
-%    d2 = d3*Theta2(:,2:end) .* sigmoidGradient(z2(m,:)); %d2 size 1x25
-% 
-%    Delta2 = Delta2 + d3.'*a2t; %Delta2 size 10x25 
-%    Delta1 = Delta1 + d2.'*a1t; %Delta1 size 25x400
-% end
-% Delta1 = [ones(hidden_layer_size,1) Delta1]; %Delta1 size 25x401
-% Delta2 = [ones(num_labels,1) Delta2]; %Delta2 size 10x26
-% Theta1_grad = 1/m .* Delta1; %should be size 10x26
-% Theta2_grad = 1/m .* Delta2; %should be size 25x401
+Delta1=0;
+Delta2=0;
+for t = 1:m
+   a1t = a1(m,2:end); %a1t size 1x400
+   a2t = a2(m,2:end); %a2t size 1x25
+   a3t = a3(m,:); %a3t size     1x10
+   Yt = Y(m,:); %Yt size        1x10
+   
+   d3 = a3t - Yt; %d3 size 1x10
+   d2 = d3*Theta2(:,2:end) .* sigmoidGradient(z2(m,:)); %d2 size 1x25
+
+   Delta2 = Delta2 + d3.'*a2t; %Delta2 size 10x25 
+   Delta1 = Delta1 + d2.'*a1t; %Delta1 size 25x400
+end
+Delta1 = [ones(hidden_layer_size,1) Delta1]; %Delta1 size 25x401
+Delta2 = [ones(num_labels,1) Delta2]; %Delta2 size 10x26
+Theta1_grad = 1/m .* Delta1; %should be size 10x26
+Theta2_grad = 1/m .* Delta2; %should be size 25x401
 
 %vectorized ---------------------------------------------------------------
-A1 = [ones(m, 1) X];
-Z2 = A1 * Theta1';
-A2 = [ones(size(Z2, 1), 1) sigmoid(Z2)];
-Z3 = A2*Theta2';
-H = sigmoid(Z3);
-A3 = H;
-penalty = (lambda/(2*m))*(sum(sum(Theta1(:, 2:end).^2, 2)) + sum(sum(Theta2(:,2:end).^2, 2)));
-J = (1/m)*sum(sum((-Y).*log(H) - (1-Y).*log(1-H), 2));
-J = J + penalty;
-Sigma3 = A3 - Y;
-Sigma2 = (Sigma3*Theta2 .* sigmoidGradient([ones(size(Z2, 1), 1) Z2]));
-Delta_1 = Sigma2(:, 2:end)'*A1;
-Delta_2 = Sigma3'*A2;
-Theta1_grad = Delta_1./m + (lambda/m)*[zeros(size(Theta1,1), 1) Theta1(:, 2:end)];
-Theta2_grad = Delta_2./m + (lambda/m)*[zeros(size(Theta2,1), 1) Theta2(:, 2:end)];
+% A1 = [ones(m, 1) X];
+% Z2 = A1 * Theta1';
+% A2 = [ones(size(Z2, 1), 1) sigmoid(Z2)];
+% Z3 = A2*Theta2';
+% A3 = sigmoid(Z3); %H=A3
+% penalty = (lambda/(2*m))*(sum(sum(Theta1(:, 2:end).^2, 2)) + sum(sum(Theta2(:,2:end).^2, 2)));
+% J = (1/m)*sum(sum((-Y).*log(A3) - (1-Y).*log(1-A3), 2));
+% J = J + penalty;
+% Sigma3 = A3 - Y;
+% Sigma2 = (Sigma3*Theta2 .* sigmoidGradient([ones(size(Z2, 1), 1) Z2]));
+% Delta_1 = Sigma2(:, 2:end)'*A1;
+% Delta_2 = Sigma3'*A2;
+% Theta1_grad = Delta_1./m + (lambda/m)*[zeros(size(Theta1,1), 1) Theta1(:, 2:end)];
+% Theta2_grad = Delta_2./m + (lambda/m)*[zeros(size(Theta2,1), 1) Theta2(:, 2:end)];
 % -------------------------------------------------------------------------
 
 % =========================================================================

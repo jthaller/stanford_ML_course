@@ -1,7 +1,7 @@
 function submitWithConfiguration(conf)
   addpath('./lib/jsonlab');
 
-  parts = parts(conf);
+  parts = parts_sub(conf);
 
   fprintf('== Submitting solutions | %s...\n', conf.itemName);
 
@@ -63,7 +63,7 @@ end
 
 function response = submitParts(conf, email, token, parts)
   body = makePostBody(conf, email, token, parts);
-  submissionUrl = submissionUrl();
+  submissionUrl = submissionUrl_sub();
 
   responseBody = getResponse(submissionUrl, body);
   jsonResponse = validateResponse(responseBody);
@@ -89,7 +89,7 @@ function partsStruct = makePartsStruct(conf, parts)
   end
 end
 
-function [parts] = parts(conf)
+function [parts] = parts_sub(conf)
   parts = {};
   for partArray = conf.partArrays
     part.id = partArray{:}{1};
@@ -174,6 +174,6 @@ end
 % Service configuration
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function submissionUrl = submissionUrl()
+function submissionUrl = submissionUrl_sub()
   submissionUrl = 'https://www-origin.coursera.org/api/onDemandProgrammingImmediateFormSubmissions.v1';
 end

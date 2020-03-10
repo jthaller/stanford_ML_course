@@ -230,36 +230,30 @@ fprintf('test error', test_error);
 %calc train error and cv error on 50 randomly chosen subsets of each
 %then plot validation curve (y=error, = num training examples). set lambda
 %= .01
-% 
-%i've decided getting it to work is not worth my time at them moment.
-%datasample doesn't quite do what I need it to do. that's all that needs to
-%be fixed.
 
-% lambda = 0.01;
-% error_train = zeros(50,1);
-% error_val = zeros(50,1);
-% for i=1:50
-%     subset_size = 8;
-%     [X_poly_subset, y_subset] = datasample([X_poly y], subset_size);
-%     [X_poly_val_subset, yval_subset] = datasample([X_poly_val yval],subset_size);
-%     theta = trainLinearReg(X_poly_subset,y_subset,lambda);
-%     [error_train(i), error_grad(i)] = ...
-%         linearRegCostFunction([ones(subset_size, 1) X_poly_subset], y_subset, ...
-%                       theta, lambda);  
-%    [error_val(i), error_vgrad(i)]= ...
-%        linearRegCostFunction([ones(subset_size, 1) X_poly_val_subset], ...
-%        yval_subset, theta, lambda);
-% end
-% 
-% avg_training_error = mean(error_train)
-% avg_val_error = mean(error_val)
-%
-% %now call plot the linear regs costs.
-% 
-% plot(1:m, error_train, 1:m, error_val);
-% title('Learning curve for linear regression')
-% legend('Train', 'Cross Validation')
-% xlabel('Number of training examples')
-% ylabel('Error')
-% axis([0 13 0 150])
+lambda = 0.01;
+error_train = zeros(50,1);
+error_val = zeros(50,1);
+for i=1:50
+    subset_size = 8;
+    [X_poly_subset, y_subset] = datasample([X_poly y], subset_size);
+    [X_poly_val_subset, yval_subset] = datasample([X_poly_val yval],subset_size);
+    theta = trainLinearReg(X_poly_subset,y_subset,lambda);
+    [error_train(i), error_grad(i)] = ...
+        linearRegCostFunction([ones(subset_size, 1) X_poly_subset], y_subset, ...
+                      theta, lambda);  
+   [error_val(i), error_vgrad(i)]= ...
+       linearRegCostFunction([ones(subset_size, 1) X_poly_val_subset], ...
+       yval_subset, theta, lambda);
+end
+
+avg_training_error = 
+avg_val_error = 
+
+plot(1:m, error_train, 1:m, error_val);
+title('Learning curve for linear regression')
+legend('Train', 'Cross Validation')
+xlabel('Number of training examples')
+ylabel('Error')
+axis([0 13 0 150])
 

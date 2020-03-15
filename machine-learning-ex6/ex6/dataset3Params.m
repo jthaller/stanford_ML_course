@@ -31,7 +31,7 @@ for C = C_vec
   for sigma = sigma_vec
 %     C
 %     sigma
-    model= svmTrain(X, y, C, @(X, y) gaussianKernel(X, y, sigma)); 
+    model= svmTrain(X, y, C, @(X, y) gaussianKernel(X, y, sigma));
     predictions = svmPredict(model, Xval);
     error =  mean(double(predictions ~= yval));
     if error < min_error
@@ -44,10 +44,6 @@ end
 
 C=best_C;
 sigma=best_sigma;
-
-
-
-
 
 
 

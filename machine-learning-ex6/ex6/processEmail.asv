@@ -97,16 +97,12 @@ while ~isempty(email_contents)
     %       str2). It will return 1 only if the two strings are equivalent.
     %
 
-    % strfind doesn't seem to work with an array, only a text block
-    % unfortunately. I guess I could flatten it, but I'll just write the
-    % loop instead
     
-    for i = 1:length(vocabList)
-        if strcmp(str,vocabList{i})
-            word_indices = [word_indices ; i];
-        end  
-    end
-        
+    
+    
+    
+    
+
 
     % =============================================================
 

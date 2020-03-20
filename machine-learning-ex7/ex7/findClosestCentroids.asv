@@ -21,18 +21,35 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-dist_to_centroid = zeros(K);
-for pt = 1:size(X,1) %loop over every example
-    for c = 1:K %for each example find the nearest centroid
-        dist_to_centroid(c) =  ( X(c,1) - centroids(pt,1) ).^2 + ( X(c,2) - centroids(pt,2) ).^2 ;
+% dist_to_centroid = zeros(K,1);
+% for pt = 1:size(X,1) %loop over every example
+%     for c = 1:K %for each excample find the nearest centroid
+%         dist_to_centroid(c,1) = ( (X(pt,1) - centroids(c,1)) + (X(pt,2) - centroids(c,2)) ).^2 ;
+%     end
+%     [min_dist best_centroid_index] = min(dist_to_centroid);
+%     idx(pt,1) = best_centroid_index;
+% end
+
+%% or in one line
+for i = 1:size(X,1),
+   [a idx(i)] = min( ...
+       sum( ...
+       ((X(i,:) - centroids).*(X(i,:) - centroids)),2) ...
+       );
+end;   
+
+
+for i = 1:size(X, 1)
+  min_d = inf;
+  for k = 1:K
+    diff = X(i, :)'-centroids(k, :)';
+    d = diff'*diff;
+    if (d < min_d)
+      idx(i) = k;
+      min_d = d;
     end
-    [min best_centroid_index] = min(dist_to_centroid);
-    idx(pt) = best_centroid_index;
+  end
 end
-
-
-
-
 
 
 % =============================================================

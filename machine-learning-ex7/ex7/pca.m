@@ -20,6 +20,12 @@ S = zeros(n);
 %       number of examples).
 %
 
+%covariance
+Sigma = 1/m * X.' * X;
+% eigenvectors
+%S is diagonal matrix and U and V are unitary so X=U*S*V'
+[U, S, V] = svd(Sigma);
+
 
 
 
